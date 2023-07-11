@@ -67,14 +67,140 @@ getting it in nice tabular form ...
 
 
 #+begin_src python :session *py-session :results output :exports both :tangle "datasets.py"
-df = pd.DataFrame(diabetes['data'], columns=diabetes['feature_names'])
+df = pd.DataFrame(np.c_[diabetes['data'], diabetes['target']], columns=diabetes['feature_names']+['target'])
 print(df.head())
 #+end_src
 
 #+RESULTS:
-:         age       sex       bmi        bp        s1        s2        s3        s4        s5        s6
-: 0  0.038076  0.050680  0.061696  0.021872 -0.044223 -0.034821 -0.043401 -0.002592  0.019907 -0.017646
-: 1 -0.001882 -0.044642 -0.051474 -0.026328 -0.008449 -0.019163  0.074412 -0.039493 -0.068332 -0.092204
-: 2  0.085299  0.050680  0.044451 -0.005670 -0.045599 -0.034194 -0.032356 -0.002592  0.002861 -0.025930
-: 3 -0.089063 -0.044642 -0.011595 -0.036656  0.012191  0.024991 -0.036038  0.034309  0.022688 -0.009362
-: 4  0.005383 -0.044642 -0.036385  0.021872  0.003935  0.015596  0.008142 -0.002592 -0.031988 -0.046641
+:         age       sex       bmi        bp        s1        s2        s3        s4        s5        s6  target
+: 0  0.038076  0.050680  0.061696  0.021872 -0.044223 -0.034821 -0.043401 -0.002592  0.019907 -0.017646   151.0
+: 1 -0.001882 -0.044642 -0.051474 -0.026328 -0.008449 -0.019163  0.074412 -0.039493 -0.068332 -0.092204    75.0
+: 2  0.085299  0.050680  0.044451 -0.005670 -0.045599 -0.034194 -0.032356 -0.002592  0.002861 -0.025930   141.0
+: 3 -0.089063 -0.044642 -0.011595 -0.036656  0.012191  0.024991 -0.036038  0.034309  0.022688 -0.009362   206.0
+: 4  0.005383 -0.044642 -0.036385  0.021872  0.003935  0.015596  0.008142 -0.002592 -0.031988 -0.046641   135.0
+
+* Breast Cancer
+
+#+begin_src python :session *py-session :results output :exports both :tangle "datasets.py"
+bc = load_breast_cancer()
+print(bc['data'].shape)
+#+end_src
+
+#+RESULTS:
+: (569, 30)
+
+Breast Cancer datasets concerns 569 biopsies of malignant and benign tumors. The datasets provides 30 features extracted from images of fine-needle aspiration biopsies that describe cell nuclei.
+
+Availabel features:
+
+#+begin_src python :session *py-session :results output :exports both :tangle "datasets.py"
+print(bc['feature_names'])
+#+end_src
+
+#+RESULTS:
+: ['mean radius' 'mean texture' 'mean perimeter' 'mean area'
+:  'mean smoothness' 'mean compactness' 'mean concavity'
+:  'mean concave points' 'mean symmetry' 'mean fractal dimension'
+:  'radius error' 'texture error' 'perimeter error' 'area error'
+:  'smoothness error' 'compactness error' 'concavity error'
+:  'concave points error' 'symmetry error' 'fractal dimension error'
+:  'worst radius' 'worst texture' 'worst perimeter' 'worst area'
+:  'worst smoothness' 'worst compactness' 'worst concavity'
+:  'worst concave points' 'worst symmetry' 'worst fractal dimension']
+
+dataset target ...
+
+#+begin_src python :session *py-session :results output :exports both :tangle "datasets.py"
+print(bc['target_names'])
+#+end_src
+
+#+RESULTS:
+: ['malignant' 'benign']
+
+dataset target concerns the diagnosis, that is, whether a tumor is malignant or benign. Thus this is a classification dataset.
+
+* Handwritten digits
+The MNIST handwritten dataset os one of the most famous image recognition datasets. it consists of square images, 8x8 pixels, each containing a sinle handwritten digit. Thus the dataset features are an 8x8 matrix, containing each pixel's color in grayscale. The target consists of 10 classes, one for each digit from 0 to 9. This is a classification dataset.
+
+#+begin_src python :session *py-session :results output file :exports both :tangle "datasets.py"
+digits = load_digits()
+img_labels = list(zip(digits.images, digits.target))
+for idx, (img, label) in enumerate(img_labels[10:20]):
+    plt.subplot(2, 5, idx + 1)
+    plt.axis('off')
+    plt.imshow(img, cmap=plt.cm.gray_r, interpolation='nearest')
+    plt.title(f"Target: {label}")
+plt.savefig("img/digits.png")
+print("img/digits.png")
+#+end_src
+
+#+RESULTS:
+[[file:img/digits.png]]
+
+* Supervised learning
+
+It is defined by its use of labelled datasets to train algorithms that to classify data or predict outcomes accurately.
+
+** Regression
+The following figure illustrates a simple regression example. Here ~y~ is the target and ~x~ is the datset feature. Our model consists of the simple equation ~y = 2x - 5~.
+
+#+begin_src python :session *py-session :results output file :exports both :tangle "datasets.py"
+f = lambda x: 2 * x -5
+
+dat = []
+for i in range(30):
+    x = np.random.uniform(10)
+    y = f(x) + np.random.uniform(-2.0, 2.0)
+    dat.append([x, y])
+
+fig, ax = plt.subplots()
+ax.set_xticks([])
+ax.set_yticks([])
+ax.scatter(*zip(*dat))
+ax.plot([0, 10], [f(0), f(10)], linestyle='--', color='m')
+ax.set(xlabel='x', ylabel='y', title='Regression')
+plt.savefig("img/regression.png")
+print("img/regression.png")
+#+end_src
+
+#+RESULTS:
+[[file:img/regression.png]]
+
+As is evident, the line closely follows the data. In order to estimate the ~y~ value of new unseen point, we calculate its value using the preceding formula.
+
+** Classification
+This time we test whether the point is above or below the line.
+
+#+begin_src python :session *py-session :results output file :exports both :tangle "datasets.py"
+
+pos = []
+neg = []
+
+for i in range(30):
+    x = np.random.randint(15)
+    y = np.random.randint(15)
+
+    if f(x) < y:
+        pos.append([x, y])
+    else:
+        neg.append([x, y])
+
+# plot
+fig, ax = plt.subplots()
+ax.set_xticks([])
+ax.set_yticks([])
+ax.scatter(*zip(*pos))
+ax.scatter(*zip(*neg))
+ax.plot([0, 10], [f(0), f(10)], linestyle='--', color='m')
+ax.set(xlabel='x', ylabel='y', title='Classification')
+
+plt.savefig("img/classification.png")
+print("img/classification.png")
+#+end_src
+
+#+RESULTS:
+[[file:img/classification.png]]
+
+above is a simple classification with ~y = 2x -5~ as the boundary.
+
+* Unsupervised learning
