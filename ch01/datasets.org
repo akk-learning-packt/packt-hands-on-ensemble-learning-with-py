@@ -236,5 +236,33 @@ print("img/clustering.png")
 
 #+RESULTS:
 [[file:img/clustering.png]]
-  super()._check_params_vs_input(X, default_n_init=10)
-img/clustering.png]]
+
+* Dimensionality reduction
+
+Dataset dimension is the number of features present in dataset. Often many features can be corelated, noisy or simply not provide much information. Nonetheless, the cost of storing and processing data is correlated with a  dataset's dimensionality. Thus, by reducing the dimensions,we can help the algorithms to better model the data.
+
+Another use of dimensionality reduction is for the visualization of high-dimensional datasets. For example, using the *t-distributed Stochastic Neighbor Embedding (t-SNE)* algorithm, we can reduce the breast cancer dataset to two dimensions or components. It's quite easy to  visualize two...
+
+#+begin_src python :session *py-session :results output file :exports both :tangle "datasets.py"
+from sklearn.manifold import TSNE
+
+tsne = TSNE()
+
+dat = tsne.fit_transform(bc.data)
+reds = bc.target == 0
+blues = bc.target == 1
+
+fig, ax = plt.subplots()
+ax.scatter(dat[reds, 0], dat[reds, 1], label='malignant')
+ax.scatter(dat[blues, 0], dat[blues, 1], label='benign')
+ax.set(xlabel='1st Component', ylabel='2nd Component',
+       title="Breast Cancer Data")
+ax.legend()
+plt.savefig("img/breast_cancer_tsne.png")
+print("img/breast_cancer_tsne.png")
+#+end_src
+
+#+RESULTS:
+[[file:img/breast_cancer_tsne.png]]
+
+Furthermore, we can visually test whether the information contained within the dataset can be utilized to separate the dataset's classes or not. By plotting the two components, we can conclude that a degree of separability between the classes exists.
