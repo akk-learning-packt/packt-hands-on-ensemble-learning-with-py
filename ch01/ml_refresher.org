@@ -1,9 +1,9 @@
-#+TITLE: Popular Machine Learning datasets
+#+TITLE: Machine Learning Refresher
 
 Machine learning relies on data in order to produce models. Here are some popular machine learning datasets.
 
 * Libraries
-#+begin_src python :session *py-session :results output :exports code :tangle "datasets.py"
+#+begin_src python :session *py-session :results output :exports code :tangle "ml_refresher.py"
 from sklearn.datasets import load_digits, load_breast_cancer, load_diabetes
 
 import numpy as np
@@ -23,7 +23,7 @@ from sklearn.decomposition import KernelPCA
 The diabetes dataset concerns 442 individual diabetes patients and the progression of the disease one year after a baseline measurement.
 The dataset consists of 10 features, which are the patient's ~age~, ~sex~, body mass index ~(bmi)~, average blood pressure ~(bp)~, and six measurements of their blood serum. The dataset target is the progression of the disease one year after the baseline measurement. This is a regression dataset, as the target is a number.
 
-#+begin_src python :session *py-session :results output :exports both :tangle "datasets.py"
+#+begin_src python :session *py-session :results output :exports both :tangle "ml_refresher.py"
 diabetes = load_diabetes()
 print(diabetes.keys())
 #+end_src
@@ -33,7 +33,7 @@ print(diabetes.keys())
 
 getting features names ...
 
-#+begin_src python :session *py-session :results output :exports both :tangle "datasets.py"
+#+begin_src python :session *py-session :results output :exports both :tangle "ml_refresher.py"
 print(diabetes['feature_names'])
 #+end_src
 
@@ -42,7 +42,7 @@ print(diabetes['feature_names'])
 
 getting data ...
 
-#+begin_src python :session *py-session :results output :exports both :tangle "datasets.py"
+#+begin_src python :session *py-session :results output :exports both :tangle "ml_refresher.py"
 print(diabetes['data'])
 #+end_src
 
@@ -66,7 +66,7 @@ print(diabetes['data'])
 getting it in nice tabular form ...
 
 
-#+begin_src python :session *py-session :results output :exports both :tangle "datasets.py"
+#+begin_src python :session *py-session :results output :exports both :tangle "ml_refresher.py"
 df = pd.DataFrame(np.c_[diabetes['data'], diabetes['target']], columns=diabetes['feature_names']+['target'])
 print(df.head())
 #+end_src
@@ -81,7 +81,7 @@ print(df.head())
 
 * Breast Cancer
 
-#+begin_src python :session *py-session :results output :exports both :tangle "datasets.py"
+#+begin_src python :session *py-session :results output :exports both :tangle "ml_refresher.py"
 bc = load_breast_cancer()
 print(bc['data'].shape)
 #+end_src
@@ -93,7 +93,7 @@ Breast Cancer datasets concerns 569 biopsies of malignant and benign tumors. The
 
 Availabel features:
 
-#+begin_src python :session *py-session :results output :exports both :tangle "datasets.py"
+#+begin_src python :session *py-session :results output :exports both :tangle "ml_refresher.py"
 print(bc['feature_names'])
 #+end_src
 
@@ -110,7 +110,7 @@ print(bc['feature_names'])
 
 dataset target ...
 
-#+begin_src python :session *py-session :results output :exports both :tangle "datasets.py"
+#+begin_src python :session *py-session :results output :exports both :tangle "ml_refresher.py"
 print(bc['target_names'])
 #+end_src
 
@@ -122,7 +122,7 @@ dataset target concerns the diagnosis, that is, whether a tumor is malignant or 
 * Handwritten digits
 The MNIST handwritten dataset os one of the most famous image recognition datasets. it consists of square images, 8x8 pixels, each containing a sinle handwritten digit. Thus the dataset features are an 8x8 matrix, containing each pixel's color in grayscale. The target consists of 10 classes, one for each digit from 0 to 9. This is a classification dataset.
 
-#+begin_src python :session *py-session :results output file :exports both :tangle "datasets.py"
+#+begin_src python :session *py-session :results output file :exports both :tangle "ml_refresher.py"
 digits = load_digits()
 img_labels = list(zip(digits.images, digits.target))
 for idx, (img, label) in enumerate(img_labels[10:20]):
@@ -144,7 +144,7 @@ It is defined by its use of labelled datasets to train algorithms that to classi
 ** Regression
 The following figure illustrates a simple regression example. Here ~y~ is the target and ~x~ is the datset feature. Our model consists of the simple equation ~y = 2x - 5~.
 
-#+begin_src python :session *py-session :results output file :exports both :tangle "datasets.py"
+#+begin_src python :session *py-session :results output file :exports both :tangle "ml_refresher.py"
 f = lambda x: 2 * x -5
 
 dat = []
@@ -171,7 +171,7 @@ As is evident, the line closely follows the data. In order to estimate the ~y~ v
 ** Classification
 This time we test whether the point is above or below the line.
 
-#+begin_src python :session *py-session :results output file :exports both :tangle "datasets.py"
+#+begin_src python :session *py-session :results output file :exports both :tangle "ml_refresher.py"
 
 pos = []
 neg = []
@@ -208,7 +208,7 @@ In supervised learning we know how data is structured, however in case of unsupe
 
 A simple example with three clusters is depicted in the following figure. Here, the dataset features are ~x~ and ~y~, while there is no target.
 
-#+begin_src python :session *py-session :results output file :exports both :tangle "datasets.py"
+#+begin_src python :session *py-session :results output file :exports both :tangle "ml_refresher.py"
 km = KMeans(n_clusters=3, n_init=10)
 dat = []
 
@@ -243,7 +243,7 @@ Dataset dimension is the number of features present in dataset. Often many featu
 
 Another use of dimensionality reduction is for the visualization of high-dimensional datasets. For example, using the *t-distributed Stochastic Neighbor Embedding (t-SNE)* algorithm, we can reduce the breast cancer dataset to two dimensions or components. It's quite easy to  visualize two...
 
-#+begin_src python :session *py-session :results output file :exports both :tangle "datasets.py"
+#+begin_src python :session *py-session :results output file :exports both :tangle "ml_refresher.py"
 from sklearn.manifold import TSNE
 
 tsne = TSNE()
