@@ -204,3 +204,37 @@ print("img/classification.png")
 above is a simple classification with ~y = 2x -5~ as the boundary.
 
 * Unsupervised learning
+In supervised learning we know how data is structured, however in case of unsupervised learning we do not know. In those cases, we can utilize unsupervised learning in order to discover the structure, and thus information, within the data. The simplest form of unsupervised learning is clustering. As the name implies, clustering techniques attempt to group (or cluster) data instances. Instances that belong to the same cluster shares many similarities in their features.
+
+A simple example with three clusters is depicted in the following figure. Here, the dataset features are ~x~ and ~y~, while there is no target.
+
+#+begin_src python :session *py-session :results output file :exports both :tangle "datasets.py"
+km = KMeans(n_clusters=3, n_init=10)
+dat = []
+
+t = 0.5
+
+for i in range(300):
+    c = np.random.randint(3)
+    a = np.random.uniform() * 2 * 3.14
+    r = t * np.sqrt(np.random.uniform())
+
+    x = r * np.cos(a)
+    y = r * np.sin(a)
+
+    dat.append([c+x, c+y])
+
+c = km.fit_predict(dat)
+fig, ax = plt.subplots()
+ax.set_xticks([])
+ax.set_yticks([])
+ax.scatter(*zip(*dat), c=c)
+ax.set(xlabel='x', ylabel='y', title="Clustering")
+plt.savefig("img/clustering.png")
+print("img/clustering.png")
+#+end_src
+
+#+RESULTS:
+[[file:img/clustering.png]]
+  super()._check_params_vs_input(X, default_n_init=10)
+img/clustering.png]]
