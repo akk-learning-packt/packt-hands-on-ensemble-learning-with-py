@@ -1,6 +1,11 @@
 #+TITLE: Machine Learning Refresher
 
-Machine learning relies on data in order to produce models. Here are some popular machine learning datasets.
+This chapter serves as a refresher on the main concepts and terminology, as well as an introduction to the frameworks that will be used, in order to approach ensemble learning with a solid foundation.
+Topics to be covered in this chapter are the following:
++ Required Libraries
++ Machine learning problems and datasets.
++ Evaluating the performance of a predictive model.
++ Machine learning algorithms.
 
 * Libraries
 #+begin_src python :session *py-session :results output :exports code :tangle "ml_refresher.py"
@@ -18,7 +23,10 @@ from sklearn.decomposition import KernelPCA
 
 #+RESULTS:
 
-* Diabetes
+* Machine Learning Problems & Datasets
+Machine learning relies on data in order to produce models. Here are some popular machine learning datasets.
+
+** Diabetes
 
 The diabetes dataset concerns 442 individual diabetes patients and the progression of the disease one year after a baseline measurement.
 The dataset consists of 10 features, which are the patient's ~age~, ~sex~, body mass index ~(bmi)~, average blood pressure ~(bp)~, and six measurements of their blood serum. The dataset target is the progression of the disease one year after the baseline measurement. This is a regression dataset, as the target is a number.
@@ -79,7 +87,7 @@ print(df.head())
 : 3 -0.089063 -0.044642 -0.011595 -0.036656  0.012191  0.024991 -0.036038  0.034309  0.022688 -0.009362   206.0
 : 4  0.005383 -0.044642 -0.036385  0.021872  0.003935  0.015596  0.008142 -0.002592 -0.031988 -0.046641   135.0
 
-* Breast Cancer
+** Breast Cancer
 
 #+begin_src python :session *py-session :results output :exports both :tangle "ml_refresher.py"
 bc = load_breast_cancer()
@@ -119,7 +127,7 @@ print(bc['target_names'])
 
 dataset target concerns the diagnosis, that is, whether a tumor is malignant or benign. Thus this is a classification dataset.
 
-* Handwritten digits
+** Handwritten digits
 The MNIST handwritten dataset os one of the most famous image recognition datasets. it consists of square images, 8x8 pixels, each containing a sinle handwritten digit. Thus the dataset features are an 8x8 matrix, containing each pixel's color in grayscale. The target consists of 10 classes, one for each digit from 0 to 9. This is a classification dataset.
 
 #+begin_src python :session *py-session :results output file :exports both :tangle "ml_refresher.py"
@@ -137,11 +145,11 @@ print("img/digits.png")
 #+RESULTS:
 [[file:img/digits.png]]
 
-* Supervised learning
+** Supervised learning
 
 It is defined by its use of labelled datasets to train algorithms that to classify data or predict outcomes accurately.
 
-** Regression
+*** Regression
 The following figure illustrates a simple regression example. Here ~y~ is the target and ~x~ is the datset feature. Our model consists of the simple equation ~y = 2x - 5~.
 
 #+begin_src python :session *py-session :results output file :exports both :tangle "ml_refresher.py"
@@ -168,7 +176,7 @@ print("img/regression.png")
 
 As is evident, the line closely follows the data. In order to estimate the ~y~ value of new unseen point, we calculate its value using the preceding formula.
 
-** Classification
+*** Classification
 This time we test whether the point is above or below the line.
 
 #+begin_src python :session *py-session :results output file :exports both :tangle "ml_refresher.py"
@@ -203,7 +211,7 @@ print("img/classification.png")
 
 above is a simple classification with ~y = 2x -5~ as the boundary.
 
-* Unsupervised learning
+** Unsupervised learning
 In supervised learning we know how data is structured, however in case of unsupervised learning we do not know. In those cases, we can utilize unsupervised learning in order to discover the structure, and thus information, within the data. The simplest form of unsupervised learning is clustering. As the name implies, clustering techniques attempt to group (or cluster) data instances. Instances that belong to the same cluster shares many similarities in their features.
 
 A simple example with three clusters is depicted in the following figure. Here, the dataset features are ~x~ and ~y~, while there is no target.
@@ -237,7 +245,7 @@ print("img/clustering.png")
 #+RESULTS:
 [[file:img/clustering.png]]
 
-* Dimensionality reduction
+** Dimensionality reduction
 
 Dataset dimension is the number of features present in dataset. Often many features can be corelated, noisy or simply not provide much information. Nonetheless, the cost of storing and processing data is correlated with a  dataset's dimensionality. Thus, by reducing the dimensions,we can help the algorithms to better model the data.
 
@@ -266,3 +274,27 @@ print("img/breast_cancer_tsne.png")
 [[file:img/breast_cancer_tsne.png]]
 
 Furthermore, we can visually test whether the information contained within the dataset can be utilized to separate the dataset's classes or not. By plotting the two components, we can conclude that a degree of separability between the classes exists.
+
+* Performance measures
+
+Though we can gauge the performance of a model by plotting how it separate classes and how it closely follows the data, more quantitative measures are needed in order to evaluate models.
+
+** Cost functions
+In order to assess each model's performance, we define an objective function. These functions ususally express a cost, or how far from perfect a model is. These cost functions ususally utilize a loss function to assess how well the model performed on each individual dataset instance.
+
+Some of the most widely used cost functions are mentioned below, assuming that the dataset has ~n~ instances, the target's true value for instance ~i~ is $t_{j}$; and the model's output is $y_{i}$
+
+*** Mean Absolute Error
+Mean Absolute error (MAE) or L1 loss is the mean absolute distance between the target's real values and model's outputs. It is calculated as follows:
+
+$MAE = \Sigma^{n}_{i=0} \frac{|y_{i} - t_{i}|}{n}$
+
+*** Mean Squared Error
+Mean Squared Error (MSE) or L2 loss is the mean squared distance between the target's real values and the model's output. It is calculated as follows:
+
+$MSE = \Sigma^{n}_{i=0}\frac{(y_{i} - t_{i})^{2}}{n}$
+
+*** Cross Entropy Loss
+Cross entropy loss is used in models that output probabilities between 0 and 1, ususally to express the probability that an instance is a member of a specific class. As the output probability diverges from the actual label, the loss increases. For a simple case where the dataset consists of two classes, it is calculated as follows:
+
+$CEL = -(t_{i}\log(y_{i}) + (1 - t_{i}) \log(1 - y_{i}))$
